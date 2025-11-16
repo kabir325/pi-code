@@ -8,15 +8,19 @@ from typing import Dict, List, Optional, Tuple
 from datetime import datetime, timedelta
 
 from config import Config
-from services.storage_monitor import StorageMonitor
 
 logger = logging.getLogger(__name__)
 
 class StorageHealthChecker:
     """Advanced storage health checker with detailed diagnostics and proactive monitoring"""
     
-    def __init__(self, storage_monitor: StorageMonitor = None):
-        self.storage_monitor = storage_monitor or StorageMonitor()
+    def __init__(self, storage_monitor=None):
+        # Import here to avoid circular import
+        if storage_monitor is None:
+            from services.storage_monitor import StorageMonitor
+            self.storage_monitor = StorageMonitor()
+        else:
+            self.storage_monitor = storage_monitor
         self.db_path = Config.DATABASE_PATH
         
         # Health check configuration
